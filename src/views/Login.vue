@@ -9,20 +9,23 @@
       <form class="space-y-4">
 
         <input
+          v-model="form.email"
           type="email"
           placeholder="Email"
           class="w-full p-3 border rounded bg-gray-50"
         />
 
         <input
+          v-model="form.password"
           type="password"
           placeholder="Contraseña"
           class="w-full p-3 border rounded bg-gray-50"
         />
 
         <button
-          type="submit"
-          class="w-full bg-primary text-white py-3 rounded hover:bg-primary/90"
+          @click="submit"
+          :disabled="auth.loading"
+          class="w-full cursor-pointer bg-primary text-white py-3 rounded-lg hover:bg-black transition"
         >
           Iniciar sesión
         </button>
@@ -41,6 +44,34 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import { RouterLink } from 'vue-router'
+<script setup>
+import { reactive } from 'vue'
+import { useRouter } from 'vue-router'
+
+import { useAuthStore } from '../stores/auth'
+
+const router = useRouter()
+const auth = useAuthStore()
+
+const form = reactive({
+  email: '',
+  password: ''
+})
+
+const submit = async () => {
+
+  try {
+
+    await auth.login(form)
+
+    router.push('/')
+
+  } catch (error) {
+
+    alert(
+      error.response?.data?.error ||
+      'Error login'
+    )
+  }
+}
 </script>
