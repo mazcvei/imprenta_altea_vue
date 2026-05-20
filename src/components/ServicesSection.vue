@@ -1,28 +1,3 @@
-<script setup>
-// import icons si usas librería
-const services = [
-  {
-    title: "Carpetas",
-    description: "Disponibles con o sin solapa..."
-  },
-  {
-    title: "Flayers",
-    description: "Disponibles en acabado brillo o mate..."
-  },
-  {
-    title: "Papel de Carta",
-    description: "Nuestro papel de carta..."
-  },
-  {
-    title: "Sobres",
-    description: "Nuestros sobres..."
-  },
-  {
-    title: "Tarjetas de Visita",
-    description: "Nuestras tarjetas..."
-  }
-]
-</script>
 
 <template>
   <section id="servicios" class="py-20 lg:py-32">
@@ -40,18 +15,20 @@ const services = [
 
       <!-- Grid -->
       <div class="grid sm:grid-cols-2 lg:grid-cols-5 gap-4">
-        <div
-          v-for="(service, index) in services"
-          :key="index"
+         <RouterLink
+          v-for="product in productStore.getFormattedProducts"
+          :key="product.id"
+          :to="{ name: 'product-detail', params: { id: product.id } }"
           class="group p-6 lg:p-4 bg-card border border-border rounded-lg hover:border-accent/50 transition-colors"
         >
           <h3 class="font-serif text-xl font-medium text-foreground mb-3">
-            {{ service.title }}
+            {{ product.title }}
           </h3>
+
           <p class="text-sm text-muted-foreground leading-relaxed">
-            {{ service.description }}
+            {{ product.description }}
           </p>
-        </div>
+        </RouterLink>
       </div>
 
       <!-- CTA -->
@@ -76,3 +53,14 @@ const services = [
     </div>
   </section>
 </template>
+
+<script setup>
+import { onMounted } from 'vue'
+import { useProductStore } from '../stores/products'
+
+const productStore = useProductStore()
+
+onMounted(() => {
+  productStore.fetchProducts()
+})
+</script>

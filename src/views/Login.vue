@@ -6,7 +6,7 @@
       <h1 class="text-2xl font-bold text-center mb-2">Iniciar sesión</h1>
       <p class="text-sm text-center text-gray-500 mb-6">Accede a tu cuenta</p>
 
-      <form class="space-y-4">
+      <form class="space-y-4"  @submit.prevent="submit">
 
         <input
           v-model="form.email"
