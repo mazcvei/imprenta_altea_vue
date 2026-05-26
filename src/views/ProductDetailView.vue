@@ -10,7 +10,7 @@
         <!-- IMAGEN -->
         <div class="bg-card border border-border rounded-lg overflow-hidden">
           <img
-            :src="product.image || '/placeholder.jpg'"
+            :src="`${API_BASE_URL}/storage/${product.image}` || '/placeholder.jpg'"
             class="w-full h-[420px] object-cover"
             alt="producto"
           />
@@ -62,6 +62,28 @@
                 </span>
               </label>
             </div>
+            <div class="space-y-3">
+              <label
+                class="text-sm font-medium text-foreground uppercase tracking-wide"
+              >
+                Adjuntar imagen
+              </label>
+
+              <input
+                type="file"
+                accept="image/*"
+                @change="handleFileChange"
+                class="w-full border border-border rounded-md p-2 bg-background text-foreground"
+              />
+
+              <div v-if="previewImage" class="mt-4">
+                <img
+                  :src="previewImage"
+                  class="w-40 h-40 object-cover rounded-lg border border-border"
+                />
+              </div>
+            </div>
+
           </div>
 
           <!-- RESUMEN -->
@@ -73,7 +95,7 @@
             </p>
           </div>
           <button
-            class="w-full bg-secondary text-secondary-foreground hover:bg-secondary/90 py-3 rounded-md transition"
+            class="w-full bg-secondary text-secondary-foreground hover:bg-secondary/90 py-3 rounded-md transition cursor-pointer"
             :disabled="loading"
             @click="addToCart"
           >
@@ -81,7 +103,7 @@
           </button>
           <!-- BOTÓN -->
           <button
-            class="w-full bg-primary text-primary-foreground hover:bg-primary/90 py-3 rounded-md transition"
+            class="w-full bg-primary text-primary-foreground hover:bg-primary/90 py-3 rounded-md transition cursor-pointer"
             :disabled="loading"
             @click="pay"
           >
@@ -98,7 +120,7 @@ import { useRoute } from "vue-router";
 import api from "../services/api";
 import { useProductStore } from "../stores/products";
 import { useCartStore } from "../stores/cart";
-
+const API_BASE_URL = import.meta.env.VITE_ROOT_URL
 const route = useRoute();
 const store = useProductStore();
 const cart = useCartStore();
@@ -106,6 +128,8 @@ const cart = useCartStore();
 const product = ref(null);
 const selectedPrice = ref(null);
 const loading = ref(false);
+const selectedFile = ref(null);
+const previewImage = ref(null);
 
 onMounted(async () => {
   product.value = await store.fetchProduct(route.params.id);
@@ -149,11 +173,22 @@ const addToCart = async () => {
   try {
     loading.value = true;
 
-    await api.post("/cart", {
-      product_id: product.value.id,
-      price_unit_id: selectedPrice.value.id,
+    const formData = new FormData();
+
+    formData.append("product_id", product.value.id);
+    formData.append("price_unit_id", selectedPrice.value.id);
+
+    if (selectedFile.value) {
+      formData.append("image", selectedFile.value);
+    }
+
+    await api.post("/cart", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
     });
-    cart.fetchCart(); // Actualiza el estado del carrito después de añadir un producto
+
+    cart.fetchCart();
 
     alert("Producto añadido al carrito");
   } catch (error) {
@@ -162,5 +197,48 @@ const addToCart = async () => {
   } finally {
     loading.value = false;
   }
+};
+const handleFileChange = (event) => {
+  const file = event.target.files[0];
+
+  if (!file) return;
+
+  const allowedTypes = [
+    "image/jpeg",
+    "image/jpg",
+    "image/png",
+    "image/webp",
+  ];
+
+  // Máximo 4MB
+  const maxSize = 4 * 1024 * 1024;
+
+  
+  if (!allowedTypes.includes(file.type)) {
+    alert("Solo se permiten imágenes JPG, JPEG, PNG o WEBP");
+
+    event.target.value = "";
+
+    selectedFile.value = null;
+    previewImage.value = null;
+
+    return;
+  }
+
+  // Validar tamaño
+  if (file.size > maxSize) {
+    alert("La imagen no puede superar los 4MB");
+
+    event.target.value = "";
+
+    selectedFile.value = null;
+    previewImage.value = null;
+
+    return;
+  }
+
+  selectedFile.value = file;
+
+  previewImage.value = URL.createObjectURL(file);
 };
 </script>

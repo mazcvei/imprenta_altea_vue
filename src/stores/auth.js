@@ -32,7 +32,7 @@ export const useAuthStore = defineStore("auth", {
     },
 
     isAdmin: (state) => {
-      return state.user?.role?.name === "ADMINISTRADOR";
+      return state.user?.role?.name === "admin";
     },
 
     hasRole: (state) => {

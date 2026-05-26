@@ -96,11 +96,20 @@
                 <!-- ADMIN -->
                 <RouterLink
                   v-if="auth.isAdmin"
-                  to="/admin"
+                  to="/admin/productos"
                   class="block px-4 py-2 text-md hover:bg-gray-100 transition-colors"
                   @click="isUserDropdownOpen = false"
                 >
-                  Panel Admin
+                  Gestionar productos
+                </RouterLink>
+                
+                <RouterLink
+                  v-if="auth.isAdmin"
+                  to="/admin/pedidos"
+                  class="block px-4 py-2 text-md hover:bg-gray-100 transition-colors"
+                  @click="isUserDropdownOpen = false"
+                >
+                  Gestionar pedidos
                 </RouterLink>
 
            

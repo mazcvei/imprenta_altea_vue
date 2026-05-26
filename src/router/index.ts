@@ -11,6 +11,9 @@ import PaymentCancel from '../views/PaymentCancel.vue'
 import ProfileView from '../views/ProfileView.vue'
 import ProductDetailView from '../views/ProductDetailView.vue'
 import CartView from '../views/CartView.vue'
+import AdminProductsView from '../views/AdminProductsView.vue'
+import AdminOrdersView from '../views/AdminOrdersView.vue'
+import ProductFormView from '../views/ProductFormView.vue'
 
 // import AdminView from '../views/AdminView.vue'
 
@@ -94,11 +97,49 @@ const router = createRouter({
     {
       path: '/admin',
       name: 'admin',
-      component: PaymentSuccess, // AdminView
+      component: PaymentSuccess, 
       meta: {
         requiresAuth: true,
         roles: ['admin'],
         title: 'Panel Admin'
+      }
+    },
+   {
+      path: '/admin/productos',
+      name: 'admin-products',
+      component: AdminProductsView, 
+      meta: {
+        requiresAuth: true,
+        roles: ['admin'],
+        title: 'Gestionar productos'
+      }
+    },
+     {
+      path: '/admin/pedidos',
+      name: 'admin-orders',
+      component: AdminOrdersView, 
+      meta: {
+        requiresAuth: true,
+        roles: ['admin'],
+        title: 'Gestionar pedidos'
+      }
+    },
+    {
+      path: '/admin/productos/crear',
+      component: ProductFormView,
+        meta: {
+        requiresAuth: true,
+        roles: ['admin'],
+        title: 'Nuevo producto'
+      }
+    },
+    {
+      path: '/admin/productos/:id/editar',
+      component: ProductFormView,
+        meta: {
+        requiresAuth: true,
+        roles: ['admin'],
+        title: 'Editar producto'
       }
     },
     {
@@ -128,17 +169,16 @@ router.beforeEach(async (to, from, next) => {
 
   try {
 
-    /**
-     * Actualizar título página
-     */
+    
     if (to.meta.title) {
       document.title = `${to.meta.title} | Altea`
     }
 
-    /**
-     * Si existe token pero expiró
-     */
-    if (auth.token && auth.isTokenExpired) {
+    if (
+      auth.token &&
+      auth.isTokenExpired &&
+      to.name !== 'login'
+    ) {
 
       const refreshed = await auth.refreshToken()
 
@@ -155,10 +195,11 @@ router.beforeEach(async (to, from, next) => {
       }
     }
 
-    /**
-     * Rutas protegidas
-     */
-    if (to.meta.requiresAuth && !auth.isAuthenticated) {
+    
+    if (
+      to.meta.requiresAuth &&
+      !auth.isAuthenticated
+    ) {
 
       return next({
         name: 'login',
@@ -168,10 +209,10 @@ router.beforeEach(async (to, from, next) => {
       })
     }
 
-    /**
-     * Guest only
-     */
-    if (to.meta.guestOnly && auth.isAuthenticated) {
+    if (
+      to.meta.guestOnly &&
+      auth.isAuthenticated
+    ) {
 
       return next({
         name: 'home'
@@ -179,13 +220,19 @@ router.beforeEach(async (to, from, next) => {
     }
 
     /**
-     * Roles
+     * ROLES
      */
-    if (to.meta.roles) {
+    console.log('to.meta.roles', to.meta.roles) 
+    
 
+    if (to.meta.roles) {
+      
       const userRole = auth.user?.role?.name
 
-      if (!userRole || !to.meta.roles.includes(userRole)) {
+      if (
+        !userRole ||
+        !to.meta.roles.includes(userRole)
+      ) {
 
         return next({
           name: 'home'
@@ -193,7 +240,7 @@ router.beforeEach(async (to, from, next) => {
       }
     }
 
-    next()
+    return next()
 
   } catch (error) {
 
@@ -201,7 +248,7 @@ router.beforeEach(async (to, from, next) => {
 
     await auth.logout()
 
-    next({
+    return next({
       name: 'login'
     })
   }

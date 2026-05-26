@@ -27,17 +27,31 @@
           </p>
         </div>
 
-        <!-- Apellidos -->
+        <!-- Apellido 1 -->
         <div>
           <input
-            v-model="form.lastname"
+            v-model="form.lastname1"
             type="text"
-            placeholder="Apellidos"
+            placeholder="Apellido 1"
             class="w-full p-3 border rounded bg-gray-50"
           />
 
-          <p v-if="errors.lastname" class="text-red-500 text-sm mt-1">
-            {{ errors.lastname }}
+          <p v-if="errors.lastname1" class="text-red-500 text-sm mt-1">
+            {{ errors.lastname1 }}
+          </p>
+        </div>
+
+        <!-- Apellido 2 -->
+        <div>
+          <input
+            v-model="form.lastname2"
+            type="text"
+            placeholder="Apellido 2"
+            class="w-full p-3 border rounded bg-gray-50"
+          />
+
+          <p v-if="errors.lastname2" class="text-red-500 text-sm mt-1">
+            {{ errors.lastname2 }}
           </p>
         </div>
 
@@ -121,7 +135,8 @@ const errors = ref({})
 
 const form = reactive({
   name: '',
-  lastname: '',
+  lastname1: '',
+  lastname2: '',
   email: '',
   password: '',
   password_confirmation: ''
@@ -136,13 +151,26 @@ const validateForm = () => {
     errors.value.name = 'El nombre es obligatorio'
   } else if (form.name.length > 255) {
     errors.value.name = 'Máximo 255 caracteres'
+  } else if (form.name.length < 3) {
+    errors.value.name = 'Mínimo 3 caracteres'
   }
 
-  // Apellidos
-  if (!form.lastname.trim()) {
-    errors.value.lastname = 'Los apellidos son obligatorios'
-  } else if (form.lastname.length > 255) {
-    errors.value.lastname = 'Máximo 255 caracteres'
+  // Apellido 1
+  if (!form.lastname1.trim()) {
+    errors.value.lastname1 = 'El apellido 1 es obligatorio'
+  } else if (form.lastname1.length > 255) {
+    errors.value.lastname1 = 'Máximo 255 caracteres'
+  } else if (form.lastname1.length < 3) {
+    errors.value.lastname1 = 'Mínimo 3 caracteres'
+  }
+
+  // Apellido 2
+  if (!form.lastname2.trim()) {
+    errors.value.lastname2 = 'El apellido 2 es obligatorio'
+  } else if (form.lastname2.length > 255) {
+    errors.value.lastname2 = 'Máximo 255 caracteres'
+  } else if (form.lastname2.length < 3) {
+    errors.value.lastname2 = 'Mínimo 3 caracteres'
   }
 
   // Email
@@ -156,14 +184,12 @@ const validateForm = () => {
     errors.value.email = 'Máximo 255 caracteres'
   }
 
-  // Contraseña
   if (!form.password) {
     errors.value.password = 'La contraseña es obligatoria'
   } else if (form.password.length < 6) {
     errors.value.password = 'Mínimo 6 caracteres'
   }
 
-  // Confirmación contraseña
   if (!form.password_confirmation) {
     errors.value.password_confirmation = 'Confirma la contraseña'
   } else if (form.password !== form.password_confirmation) {
