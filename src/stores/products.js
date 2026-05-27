@@ -45,7 +45,7 @@ export const useProductStore = defineStore("products", {
 
       try {
         const res = await api.get(`/products/${id}`);
-        console.log("res.data", res.data);
+        
         return res.data;
       } catch (err) {
         this.error = "Error cargando producto";

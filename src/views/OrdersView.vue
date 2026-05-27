@@ -92,19 +92,8 @@
 
               <!-- STATUS -->
               <td class="px-6 py-4">
-                <select
-                  :value="order.status"
-                  @change="updateStatus(order, $event)"
-                  class="h-11 rounded-xl border border-border bg-background px-4"
-                >
-                  <option :value="ORDER_STATUS.PENDIENTE">Pendiente</option>
-
-                  <option :value="ORDER_STATUS.PROCESANDO">Procesando</option>
-
-                  <option :value="ORDER_STATUS.COMPLETADO">Completado</option>
-
-                  <option :value="ORDER_STATUS.CANCELADO">Cancelado</option>
-                </select>
+                <span class="font-medium"> {{ order.status }} </span>
+                
               </td>
 
               <td class="px-6 py-4">
@@ -123,12 +112,6 @@
                     Ver
                   </button>
 
-                  <button
-                    @click="confirmDelete(order)"
-                    class="px-4 py-2 rounded-lg bg-red-500 text-white hover:opacity-90 transition"
-                  >
-                    Eliminar
-                  </button>
                 </div>
               </td>
             </tr>
@@ -159,19 +142,13 @@ const orders = ref([]);
 const flashMessage = ref("");
 const flashType = ref("success");
 
-const ORDER_STATUS = {
-  PENDIENTE: "Pendiente",
-  PROCESANDO: "Procesando",
-  COMPLETADO: "Completado",
-  CANCELADO: "Cancelado",
-};
+
 
 onMounted(async () => {
   loading.value = true;
 
   try {
-    await orderStore.fetchOrders();
-
+    await orderStore.fetchOrdersOwn();
     orders.value = orderStore.orders;
   } catch (error) {
     console.error(error);
@@ -180,50 +157,6 @@ onMounted(async () => {
   }
 });
 
-const updateStatus = async (order, event) => {
-  const status = event.target.value;
-
-  try {
-    await orderStore.updateOrderStatus(order.id, status);
-
-    order.status = status;
-    flashType.value = "success";
-
-    flashMessage.value = `Pedido #${order.id} actualizado a "${status}" correctamente`;
-
-    setTimeout(() => {
-      flashMessage.value = "";
-    }, 4000);
-  } catch (error) {
-    order.status = previousStatus;
-
-    flashType.value = "error";
-
-    flashMessage.value = "Error al actualizar el estado del pedido";
-
-    setTimeout(() => {
-      flashMessage.value = "";
-    }, 4000);
-  }
-};
-
-const confirmDelete = async (order) => {
-  const confirmed = confirm(
-    `¿Seguro que deseas eliminar el pedido #${order.id}?`,
-  );
-
-  if (!confirmed) return;
-
-  try {
-    await orderStore.deleteOrder(order.id);
-
-    orders.value = orders.value.filter((o) => o.id !== order.id);
-  } catch (error) {
-    console.error(error);
-
-    alert("Error al eliminar el pedido");
-  }
-};
 
 const formatDate = (date) => {
   return new Date(date).toLocaleDateString("es-ES", {

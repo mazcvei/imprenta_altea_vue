@@ -324,7 +324,7 @@ async function submit() {
   loading.value = true
 
   try {
-    console.log(form);
+   
     await auth.updateProfile(form)
 
     success.value =

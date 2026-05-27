@@ -95,20 +95,20 @@
             </p>
           </div>
           <button
-            class="w-full bg-secondary text-secondary-foreground hover:bg-secondary/90 py-3 rounded-md transition cursor-pointer"
+            class="w-full bg-primary text-primary-foreground hover:bg-primary/90 py-3 rounded-md transition cursor-pointer"
             :disabled="loading"
             @click="addToCart"
           >
             Añadir al carrito
           </button>
-          <!-- BOTÓN -->
-          <button
+        
+         <!--  <button
             class="w-full bg-primary text-primary-foreground hover:bg-primary/90 py-3 rounded-md transition cursor-pointer"
             :disabled="loading"
             @click="pay"
           >
             Pagar ahora
-          </button>
+          </button> -->
         </div>
       </div>
     </div>
@@ -139,7 +139,7 @@ onMounted(async () => {
   }
 });
 
-const pay = async () => {
+/* const pay = async () => {
   if (!selectedPrice.value) {
     alert("Selecciona una opción primero");
     return;
@@ -163,7 +163,7 @@ const pay = async () => {
   } finally {
     loading.value = false;
   }
-};
+}; */
 const addToCart = async () => {
   if (!selectedPrice.value) {
     alert("Selecciona una opción primero");

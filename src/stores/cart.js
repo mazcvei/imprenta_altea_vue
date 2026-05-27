@@ -48,7 +48,6 @@ export const useCartStore = defineStore('cart', {
         const res = await api.get('/cart/count')
         this.count = res.data.count
       } catch (e) {
-        console.log(e)
         this.count = 0
       }
     }

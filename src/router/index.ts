@@ -14,6 +14,9 @@ import CartView from '../views/CartView.vue'
 import AdminProductsView from '../views/AdminProductsView.vue'
 import AdminOrdersView from '../views/AdminOrdersView.vue'
 import ProductFormView from '../views/ProductFormView.vue'
+import OrderDetailView from '../views/OrderDetailView.vue'
+import OrdersView from '../views/OrdersView.vue'
+import AdminUsersView from '../views/AdminUsersView.vue'
 
 // import AdminView from '../views/AdminView.vue'
 
@@ -124,6 +127,34 @@ const router = createRouter({
         title: 'Gestionar pedidos'
       }
     },
+     {
+      path: '/pedidos',
+      name: 'orders',
+      component: OrdersView, 
+      meta: {
+        requiresAuth: true,
+        title: 'Mis pedidos'
+      }
+    },
+    {
+      path: '/admin/usuarios',
+      name: 'admin-users',
+      component: AdminUsersView,
+      meta: {
+        requiresAuth: true,
+        requiresAdmin: true,
+        title: 'Usuarios'
+      }
+    },
+    {
+      path: '/admin/pedidos/:id',
+      name: 'admin-order-detail',
+      component: OrderDetailView,
+      meta: {
+        requiresAuth: true,
+        title: 'Ver pedido'
+      }
+    },
     {
       path: '/admin/productos/crear',
       component: ProductFormView,
@@ -222,8 +253,7 @@ router.beforeEach(async (to, from, next) => {
     /**
      * ROLES
      */
-    console.log('to.meta.roles', to.meta.roles) 
-    
+
 
     if (to.meta.roles) {
       

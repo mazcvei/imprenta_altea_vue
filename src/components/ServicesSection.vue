@@ -42,11 +42,11 @@
               Accede a nuestra plataforma y realiza tu pedido online
             </p>
           </div>
-          <RouterLink to="/pago">
+          <a href="/#servicios">
             <button class="cursor-pointer bg-primary text-primary-foreground hover:bg-primary/90 px-6 py-3">
               Realizar Pedido
             </button>
-          </RouterLink>
+          </a>
         </div>
       </div>
 

@@ -93,7 +93,7 @@
             </li>
 
             <li>
-              <a href="#" class="text-sm text-primary-foreground/80 hover:text-primary-foreground transition-colors">
+              <a href="/#servicios" class="text-sm text-primary-foreground/80 hover:text-primary-foreground transition-colors">
                 Realizar Pedido
               </a>
             </li>

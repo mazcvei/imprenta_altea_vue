@@ -41,13 +41,13 @@
 
         <!-- Buttons -->
         <div class="mt-10 flex flex-col sm:flex-row gap-4">
-          <RouterLink to="/pago">
+          <a href="/#servicios">
             <button
               class="bg-primary rounded cursor-pointer text-primary-foreground hover:bg-primary/90 px-8 h-12 flex items-center"
             >
               Realizar Pedido
             </button>
-          </RouterLink>
+          </a>
 
           <button
             class="px-8 rounded h-12 cursor-pointer border border-white/40 text-white hover:bg-white/10 bg-transparent"

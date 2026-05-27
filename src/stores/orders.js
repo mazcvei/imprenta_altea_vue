@@ -18,6 +18,15 @@ export const useOrderStore = defineStore('orders', {
       return data
     },
 
+     async fetchOrdersOwn() {
+
+      const { data } = await api.get('/orders/auth')
+
+      this.orders = data
+
+      return data
+    },
+
     async updateOrderStatus(id, status) {
 
       const { data } = await api.put(

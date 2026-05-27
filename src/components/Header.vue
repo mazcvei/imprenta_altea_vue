@@ -14,19 +14,19 @@
         <!-- Desktop Navigation -->
         <nav class="hidden md:flex items-center gap-8">
           <a
-            href="#historia"
+            href="/#historia"
             class="text-lg text-muted-foreground hover:text-foreground transition-colors"
           >
             Nuestra Historia
           </a>
           <a
-            href="#servicios"
+            href="/#servicios"
             class="text-lg text-muted-foreground hover:text-foreground transition-colors"
           >
             Servicios
           </a>
           <a
-            href="#contacto"
+            href="/#contacto"
             class="text-lg text-muted-foreground hover:text-foreground transition-colors"
           >
             Contacto
@@ -102,6 +102,14 @@
                 >
                   Gestionar productos
                 </RouterLink>
+                 <RouterLink
+                  v-if="auth.isAdmin"
+                  to="/admin/usuarios"
+                  class="block px-4 py-2 text-md hover:bg-gray-100 transition-colors"
+                  @click="isUserDropdownOpen = false"
+                >
+                  Usuarios
+                </RouterLink>
                 
                 <RouterLink
                   v-if="auth.isAdmin"
@@ -122,7 +130,7 @@
                 </RouterLink>
          
                 <RouterLink
-                  to="/mi-perfil"
+                  to="/pedidos"
                   class="block px-4 py-2 text-md hover:bg-gray-100 transition-colors"
                   @click="isUserDropdownOpen = false"
                 >
@@ -234,6 +242,4 @@ const handleLogout = async () => {
   window.location.href = '/'
 }
 
-console.log(auth.user);
-console.log(auth.isAdmin);
 </script>
